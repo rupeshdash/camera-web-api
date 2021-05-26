@@ -6,7 +6,7 @@ let isRecording = false;
 let constraint = {
     audio: true, video: true
 }
-// represent future recording
+// represent future recoding
 let recording = [];
 let mediarecordingObjectForCurrStream;
 // promise 

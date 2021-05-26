@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="canvas.css">
+    <title>Document</title>
+    
+  </head>
+  <body>
+    
+    
+    <div class="colors">
+        <div class="color red"></div>
+        <div class="color lightgreen"></div>
+        <div class="color lightblue"></div>
+        <div class="download">Download</div>
+        <!-- <input type="file" class="file-selector" style="display: none;"> -->
+    </div>
+
+    <img src="https://picsum.photos/200" alt="" style="display: none;">
+
+    <canvas class="board"></canvas>
+
+
+    <script>
+      let board = document.querySelector(".board");
+      let tool = board.getContext("2d");
+
+      board.height = window.innerHeight;
+      board.width = window.innerWidth;
+
+      
+
+      //board backgroud color is black bydefault
+
+      //all the functions are of tool as on the js we had all function of
+      //document.
+      //tool is like a digital pen of the tablet for canvas
+
+    //   tool.fillStyle = "lightgreen";
+    //   tool.fillRect(0, 0, window.innerWidth / 2, window.innerHeight / 2);
+
+      // tool.strokeStyle = "yellow";
+      // tool.lineWidth = 10;
+
+      // tool.strokeRect(0,0,window.innerWidth/2,window.innerHeight/2);
+
+      // tool.fillStyle = "red";
+      // tool.fillRect(40,40,window.innerWidth/2,window.innerHeight/2);
+
+      //1-- begin path -- > it begins the path
+      //2-- moveTo(x,y) --> move tool to a specific location
+      //3-- lineTo(xf,yf) --> it draws a straight line between it and the previous point
+
+      //4-- stroke---> actual render on the UI
+
+      (tool.strokeStyle = "black"), (tool.lineWidth = 10);
+
+    //   tool.beginPath();
+    //   tool.moveTo(100, 100);
+    //   tool.lineTo(200, 50);
+    //   tool.stroke();
+
+     
+    //   function getMousePosition(canvas, event) {
+    //     let rect = canvas.getBoundingClientRect();
+    //     x = event.clientX - rect.left;
+    //     y = event.clientY - rect.top;
+        
+    //   }
+    let isDown = false;
+    tool.lineWidth = 5;
+    let colors = document.querySelectorAll(".color");
+    let colorContainer = document.querySelector(".colors");
+    for(let i=0; i<colors.length; i++){
+        colors[i].addEventListener("click",function(){
+            let newColor = colors[i].classList[1];
+            tool.strokeStyle = newColor;
+        })
+    }
+    
+    
+    
+      board.addEventListener("mousedown", (e) => {
+
+        tool.beginPath();
+        tool.moveTo(e.clientX,getY(e.clientY));
+        isDown = true;
+      });
+
+      board.addEventListener("mousemove",(e) => {
+          if(isDown==true){
+            tool.lineTo(e.clientX,getY(e.clientY));
+            tool.stroke();
+          }
+       
+      })
+      board.addEventListener("mouseup", (e) => {
+        // tool.lineTo(e.clientX,e.clientY);
+        // tool.stroke();
+        
+        isDown = false;
+      });
+
+      function getY(originalY){
+            let obj = colorContainer.getBoundingClientRect();
+            let height = obj.height;
+            return originalY - obj.height;
+        }
+
+      
+     
+
+    </script>
+    <script>
+        let download = document.querySelector(".download");
+        download.addEventListener("click",function(){
+         let url =  board.toDataURL();
+         let a = document.createElement("a");
+         a.download = "file.png";
+         a.href = url;
+         a.click();
+         a.remove();
+        })
+    </script>
+    <script>
+      let image = document.querySelector("img");
+      image.addEventListener("load",function(){
+        tool.drawImage(image,0,0,image.width,image.height,0,0,200,200);
+      })
+     
+    </script>
+  </body>
+</html>
